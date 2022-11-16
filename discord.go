@@ -323,7 +323,7 @@ func (dm *DiscordManager) SendMessage(title string, msg string) error {
 		// it in as an arg and check it here anyway
 		if opts.DiscordChannelID != "" {
 			if opts.DiscordRoleID != "" {
-				mention := fmt.Sprintf("Attention <@&%s> - %s\n", opts.DiscordRoleID, title)
+				mention := fmt.Sprintf("Attention <@&%s>\n%s\n", opts.DiscordRoleID, title)
 				messageSend := &discordgo.MessageSend{
 					Content: mention,
 					Embed:   embed.NewEmbed().SetDescription(msg).SetColor(0x1c1c1c).MessageEmbed,
@@ -367,7 +367,7 @@ func (dm *DiscordManager) SendMessageWithLink(title string, msg string, linkText
 	// it in as an arg and check it here anyway
 	if opts.DiscordChannelID != "" {
 		if opts.DiscordRoleID != "" {
-			mention := fmt.Sprintf("Attention <@&%s> - %s\n", opts.DiscordRoleID, title)
+			mention := fmt.Sprintf("Attention <@&%s>\n%s\n", opts.DiscordRoleID, title)
 			messageSend := &discordgo.MessageSend{
 				Content: mention,
 				Embed:   embed.NewEmbed().SetDescription(msg + "\n" + linkMsg).SetColor(0x1c1c1c).MessageEmbed,

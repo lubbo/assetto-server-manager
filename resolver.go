@@ -399,6 +399,7 @@ func (r *Resolver) ResolveRaceControl() *RaceControl {
 		r.resolveServerProcess(),
 		r.ResolveStore(),
 		r.resolvePenaltiesManager(),
+		r.resolveNotificationManager(),
 	)
 
 	return r.raceControl

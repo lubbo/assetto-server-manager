@@ -18,9 +18,10 @@ import (
 )
 
 type RaceControl struct {
-	process          ServerProcess
-	store            Store
-	penaltiesManager *PenaltiesManager
+	process             ServerProcess
+	store               Store
+	penaltiesManager    *PenaltiesManager
+	notificationManager NotificationDispatcher
 
 	SessionInfo                udp.SessionInfo `json:"SessionInfo"`
 	TrackMapData               TrackMapData    `json:"TrackMapData"`
@@ -77,7 +78,15 @@ type Collision struct {
 	Speed           float64        `json:"Speed"`
 }
 
-func NewRaceControl(broadcaster Broadcaster, trackDataGateway TrackDataGateway, process ServerProcess, store Store, penaltiesManager *PenaltiesManager) *RaceControl {
+func NewRaceControl(
+	broadcaster Broadcaster,
+	trackDataGateway TrackDataGateway,
+	process ServerProcess,
+	store Store,
+	penaltiesManager *PenaltiesManager,
+	notificationManager NotificationDispatcher,
+) *RaceControl {
+
 	rc := &RaceControl{
 		broadcaster:          broadcaster,
 		trackDataGateway:     trackDataGateway,
@@ -85,6 +94,7 @@ func NewRaceControl(broadcaster Broadcaster, trackDataGateway TrackDataGateway, 
 		store:                store,
 		driverSwapTimers:     make(map[int]*time.Timer),
 		penaltiesManager:     penaltiesManager,
+		notificationManager:  notificationManager,
 		carUpdaters:          make(map[udp.CarID]chan udp.CarUpdate),
 		serverProcessStopped: make(chan struct{}),
 	}
@@ -647,6 +657,7 @@ func (rc *RaceControl) OnClientConnect(client udp.SessionCarInfo) error {
 
 	rc.ConnectedDrivers.Add(driver.CarInfo.DriverGUID, driver)
 
+	rc.notificationManager.SendDriverConnected(client.DriverName, client.CarName, rc.ConnectedDrivers.Len())
 	_, err := rc.broadcaster.Send(client)
 
 	return err
@@ -672,6 +683,7 @@ func (rc *RaceControl) OnClientDisconnect(client udp.SessionCarInfo) error {
 	driver.LoadedTime = time.Time{}
 
 	rc.ConnectedDrivers.Del(driver.CarInfo.DriverGUID)
+	rc.notificationManager.SendDriverDisconnected(driverName(client.DriverName), rc.ConnectedDrivers.Len())
 
 	if driver.TotalNumLaps > 0 {
 		rc.DisconnectedDrivers.Add(driver.CarInfo.DriverGUID, driver)

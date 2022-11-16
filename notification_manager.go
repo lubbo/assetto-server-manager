@@ -24,6 +24,8 @@ type NotificationDispatcher interface {
 	SendChampionshipReminderMessage(championship *Championship, event *ChampionshipEvent, timer int) error
 	SendRaceWeekendReminderMessage(raceWeekend *RaceWeekend, session *RaceWeekendSession, timer int) error
 	SaveServerOptions(oldServerOpts *GlobalServerConfig, newServerOpts *GlobalServerConfig) error
+	SendDriverConnected(DriverName string, CarModel string, DriversCount int) error
+	SendDriverDisconnected(DriverName string, DriversCount int) error
 }
 
 // NotificationManager is the generic notification handler, which calls the individual notification
@@ -98,6 +100,8 @@ func (nm *NotificationManager) GetNotificationReminders() []int {
 
 // SendMessage sends a message (surprise surprise)
 func (nm *NotificationManager) SendMessage(title string, msg string) error {
+
+	logrus.Debugf("NotificationManager - sendMessage (%s,%s)", title, msg)
 	var err error
 
 	// Call all message senders here ... atm just discord.  The manager will know if it's enabled or not, so just call it
@@ -313,4 +317,38 @@ func (nm *NotificationManager) SendRaceWeekendReminderMessage(raceWeekend *RaceW
 	trackInfo := nm.GetTrackInfo(session.RaceConfig.Track, session.RaceConfig.TrackLayout, true)
 	msg := fmt.Sprintf("%s at %s (%s Race Weekend) starts in %s", session.Name(), raceWeekend.Name, trackInfo, reminder)
 	return nm.SendMessage(title, msg)
+}
+
+func (nm *NotificationManager) SendDriverConnected(DriverName string, CarModel string, DriversCount int) error {
+	serverOpts, err := nm.store.LoadServerOptions()
+
+	if err != nil {
+		logrus.WithError(err).Errorf("couldn't load server options")
+		return err
+	}
+
+	if serverOpts.NotifyWhenDriversChange.Bool() {
+		messageTitle := fmt.Sprintf("%s joined the server in %s", DriverName, CarModel)
+		messageBody := fmt.Sprintf("%d driver(s) currently in the server", DriversCount)
+		return nm.SendMessage(messageTitle, messageBody)
+	}
+
+	return nil
+}
+
+func (nm *NotificationManager) SendDriverDisconnected(DriverName string, DriversCount int) error {
+	serverOpts, err := nm.store.LoadServerOptions()
+
+	if err != nil {
+		logrus.WithError(err).Errorf("couldn't load server options")
+		return err
+	}
+
+	if serverOpts.NotifyWhenDriversChange.Bool() {
+		messageTitle := fmt.Sprintf("%s left the server", DriverName)
+		messageBody := fmt.Sprintf("%d driver(s) currently in the server", DriversCount)
+		return nm.SendMessage(messageTitle, messageBody)
+	}
+
+	return nil
 }

@@ -179,7 +179,7 @@ func init() {
 			NewCarManager(NewTrackManager(), false, false),
 			NewTrackManager(),
 			&dummyNotificationManager{},
-			NewRaceControl(NilBroadcaster{}, nilTrackData{}, dummyServerProcess{}, testStore, NewPenaltiesManager(testStore)),
+			NewRaceControl(NilBroadcaster{}, nilTrackData{}, dummyServerProcess{}, testStore, NewPenaltiesManager(testStore), &dummyNotificationManager{}),
 		),
 		&ACSRClient{Enabled: false},
 	)

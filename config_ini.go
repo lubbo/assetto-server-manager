@@ -223,6 +223,7 @@ type GlobalServerConfig struct {
 	NotificationReminderTimers  string               `ini:"-" help:"If Discord is enabled, a reminder will be sent this many minutes prior to race start.  If 0 or empty, only race start messages will be sent.  You may schedule multiple reminders by using a comma separated list like 120,15."`
 	ShowPasswordInNotifications formulate.BoolNumber `ini:"-" help:"Show the server password in race start notifications."`
 	NotifyWhenScheduled         formulate.BoolNumber `ini:"-" help:"Send a notification when a race is scheduled (or cancelled)."`
+	NotifyWhenDriversChange     formulate.BoolNumber `ini:"-" help:"Send a notification when a driver connect (or disconnect) to the server."`
 
 	// Messages
 	ContentManagerWelcomeMessage string `ini:"-" show:"-"`
