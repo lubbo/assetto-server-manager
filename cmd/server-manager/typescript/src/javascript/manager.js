@@ -588,7 +588,11 @@ class RaceSetup {
 
             if (state) {
                 if (!/sol/i.test($selectedOpt.val())) {
-                    $elem.val("sol_01_CLear");
+                    $elem.val("sol_01_clear");
+                }
+            } else {
+                if (/sol/i.test($selectedOpt.val())) {
+                    $elem.val("3_clear");
                 }
             }
 
