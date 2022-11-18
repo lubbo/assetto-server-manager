@@ -170,6 +170,14 @@ func (d dummyNotificationManager) SaveServerOptions(oldServerOpts *GlobalServerC
 	return nil
 }
 
+func (d dummyNotificationManager) SendDriverConnected(DriverName string, CarModel string, DriversCount int) error {
+	return nil
+}
+
+func (d dummyNotificationManager) SendDriverDisconnected(DriverName string, DriversCount int) error {
+	return nil
+}
+
 func init() {
 	config = &Configuration{}
 	championshipManager = NewChampionshipManager(
