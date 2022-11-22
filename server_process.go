@@ -124,6 +124,7 @@ func (sp *AssettoServerProcess) Start(event RaceEvent, udpPluginAddress string, 
 	}
 
 	sp.start <- event
+	logrus.Info("Start event %s", describeRaceEvent(event))
 
 	return <-sp.started
 }

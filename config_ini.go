@@ -224,6 +224,7 @@ type GlobalServerConfig struct {
 	ShowPasswordInNotifications formulate.BoolNumber `ini:"-" help:"Show the server password in race start notifications."`
 	NotifyWhenScheduled         formulate.BoolNumber `ini:"-" help:"Send a notification when a race is scheduled (or cancelled)."`
 	NotifyWhenDriversChange     formulate.BoolNumber `ini:"-" help:"Send a notification when a driver connect (or disconnect) to the server."`
+	NotifyDriversCollisions     formulate.BoolNumber `ini:"-" help:"Send a notification when a driver collide with another driver."`
 
 	// Messages
 	ContentManagerWelcomeMessage string `ini:"-" show:"-"`

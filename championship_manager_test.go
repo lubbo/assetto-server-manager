@@ -178,6 +178,10 @@ func (d dummyNotificationManager) SendDriverDisconnected(DriverName string, Driv
 	return nil
 }
 
+func (d dummyNotificationManager) SendCarsCollision(driver *RaceControlDriver, collision Collision) error {
+	return nil
+}
+
 func init() {
 	config = &Configuration{}
 	championshipManager = NewChampionshipManager(

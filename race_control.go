@@ -1286,6 +1286,8 @@ func (rc *RaceControl) OnCollisionWithCar(collision udp.CollisionWithCar) error 
 
 	_, err = rc.broadcaster.Send(collision)
 
+	rc.notificationManager.SendCarsCollision(driver, c)
+
 	return err
 }
 

@@ -495,7 +495,7 @@ func formValueAsInt(val string) int {
 }
 
 func formValueAsFloat(val string) float64 {
-	i, err := strconv.ParseFloat(val, 0)
+	i, err := strconv.ParseFloat(val, 64)
 
 	if err != nil {
 		return 0

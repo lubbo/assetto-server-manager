@@ -26,6 +26,7 @@ type NotificationDispatcher interface {
 	SaveServerOptions(oldServerOpts *GlobalServerConfig, newServerOpts *GlobalServerConfig) error
 	SendDriverConnected(DriverName string, CarModel string, DriversCount int) error
 	SendDriverDisconnected(DriverName string, DriversCount int) error
+	SendCarsCollision(driver *RaceControlDriver, collision Collision) error
 }
 
 // NotificationManager is the generic notification handler, which calls the individual notification
@@ -347,6 +348,23 @@ func (nm *NotificationManager) SendDriverDisconnected(DriverName string, Drivers
 	if serverOpts.NotifyWhenDriversChange.Bool() {
 		messageTitle := fmt.Sprintf("%s left the server", DriverName)
 		messageBody := fmt.Sprintf("%d driver(s) currently in the server", DriversCount)
+		return nm.SendMessage(messageTitle, messageBody)
+	}
+
+	return nil
+}
+
+func (nm *NotificationManager) SendCarsCollision(driver *RaceControlDriver, collision Collision) error {
+	serverOpts, err := nm.store.LoadServerOptions()
+
+	if err != nil {
+		logrus.WithError(err).Errorf("couldn't load server options")
+		return err
+	}
+
+	if serverOpts.NotifyDriversCollisions.Bool() {
+		messageTitle := fmt.Sprintf("RaceControl: lap %d - collision", driver.TotalNumLaps)
+		messageBody := fmt.Sprintf("%s collided with %s at %.2f Km/h", collision.OtherDriverName, collision.OtherDriverName, collision.Speed)
 		return nm.SendMessage(messageTitle, messageBody)
 	}
 
