@@ -60,7 +60,7 @@ func NewServerClient(addr string, receivePort, sendPort int, forward bool, forwa
 
 	go u.serve()
 	go u.forwardServe()
-	logrus.Debugf("Started new UDP server connection. laddr = %s:%d -> raddr = %s:%d Forwader to: laddr = %s:%d -> raddr = %s", addr, receivePort, addr, sendPort, addr, forwardListenPort, forwardAddrStr)
+	logrus.Infof("Started new UDP server connection. laddr = %s:%d -> raddr = %s:%d Forwader to: laddr = %s:%d -> raddr = %s", addr, receivePort, addr, sendPort, addr, forwardListenPort, forwardAddrStr)
 
 	return u, nil
 }
@@ -648,6 +648,6 @@ func (asu *AssettoServerUDP) handleMessage(r io.Reader) (Message, error) {
 		return nil, errors.New("unknown response type")
 	}
 
-	logrus.Debugf("handleMessage %s", response)
+	logrus.Infof("handleMessage %s", response)
 	return response, nil
 }
