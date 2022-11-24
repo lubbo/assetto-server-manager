@@ -363,8 +363,8 @@ func (nm *NotificationManager) SendCarsCollision(driver *RaceControlDriver, coll
 	}
 
 	if serverOpts.NotifyDriversCollisions.Bool() {
-		messageTitle := fmt.Sprintf("RaceControl: lap %d - collision", driver.TotalNumLaps)
-		messageBody := fmt.Sprintf("%s collided with %s at %.2f Km/h", collision.OtherDriverName, collision.OtherDriverName, collision.Speed)
+		messageTitle := fmt.Sprintf("RaceControl: lap %d - collision", driver.TotalNumLaps+1)
+		messageBody := fmt.Sprintf("%s collided with %s at %.2f Km/h. This is the collision #%d.", driver.CarInfo.DriverName, collision.OtherDriverName, collision.Speed, len(driver.Collisions))
 		return nm.SendMessage(messageTitle, messageBody)
 	}
 
