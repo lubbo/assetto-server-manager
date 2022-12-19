@@ -52,6 +52,7 @@ func NewServerClient(addr string, receivePort, sendPort int, forward bool, forwa
 		}
 
 		u.forwarder, err = net.DialUDP("udp", &net.UDPAddr{IP: net.ParseIP(addr), Port: forwardListenPort}, forwardAddr)
+		logrus.Infof("UDP Forwader %s -> %s", &net.UDPAddr{IP: net.ParseIP(addr), Port: forwardListenPort}, forwardAddr.String())
 
 		if err != nil {
 			return nil, err

@@ -504,6 +504,7 @@ func (sp *AssettoServerProcess) startRaceEvent(raceEvent RaceEvent) error {
 
 	for _, plugin := range config.Server.Plugins {
 		err = sp.startPlugin(wd, plugin)
+		logrus.Infof("Started plugin %s with args %s", plugin.Executable, plugin.Arguments)
 
 		if err != nil {
 			logrus.WithError(err).Errorf("Could not run extra command: %s", plugin.String())
